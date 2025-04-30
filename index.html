@@ -448,7 +448,7 @@
           <div class="tab-pane fade show active" id="nav-sunday" role="tabpanel" aria-labelledby="nav-sunday-tab">
             <div class="row">
               <div class="col-lg-6">
-                <!--
+              
                 <div class="class-item d-flex align-items-center">
                   <a href="single.html" class="class-item-thumbnail">
                     <img src="images/img_1.jpg" alt="Image">
@@ -508,7 +508,7 @@
                     <span>30 minutes</span>
                   </div>
                 </div>
-                -->
+               
             
               </div>
               <div class="col-lg-6">
@@ -1713,53 +1713,10 @@
 
   <script>
 
-    function loadDoc(url, cFunction) {
-      var xhttp;
-      xhttp=new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
-          cFunction(this);
-        }
-      };
-      xhttp.open("GET", url, true);
-      xhttp.send();
-    }
-
-    function classXML(xml){
-      var i;
-      var xmlDoc = xml.responseXML;
-      var class_list = xmlDoc.getElementsByTagName("class");
-      var html_text = "";
-      for(i=0;i<class_list.length;i++){
-        var single_page = class_list[i].getElementsByTagName("single-page")[0].childNodes[0].nodeValue;
-        var image = class_list[i].getElementsByTagName("image")[0].childNodes[0].nodeValue;
-        var time = class_list[i].getElementsByTagName("time")[0].childNodes[0].nodeValue;
-        var name = class_list[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
-        var instructor = class_list[i].getElementsByTagName("instructor")[0].childNodes[0].nodeValue;
-        var duration = class_list[i].getElementsByTagName("duration")[0].childNodes[0].nodeValue;
-        html_text += '<div class="class-item d-flex align-items-center">'+
-                      '<a href="'+single_page+'" class="class-item-thumbnail">'+
-                      '  <img src="'+image+'" alt="Image">'+
-                      '</a>'+
-                      '<div class="class-item-text">'+
-                      '  <span>'+time+'</span>'+
-                      '  <h2><a href="single.html">'+name+'</a></h2>'+
-                      '  <span>'+instructor+'</span>'+
-                      '  <span>'+duration+'</span>'+
-                      '</div>'+
-                    '</div>'
-      }
-      console.log(html_text);
-      document.getElementById("nav-sunday").children[0].children[0].innerHTML = html_text;
-    }
-
-
     window.onload = function(){
       
       const contact = document.getElementById("contact-head");
       contact.innerHTML = "WooooW";
-
-      loadDoc("./xml/class-sunday.xml", classXML);
 
     };
   </script>
