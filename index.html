@@ -428,11 +428,11 @@
                 <a class="nav-link" id="wednesday-tab" data-toggle="tab" href="#nav-wednesday" role="tab" aria-controls="wednesday"
                   aria-selected="false">W</a>
               </li>
-
               <li class="nav-item">
                 <a class="nav-link" id="thursday-tab" data-toggle="tab" href="#nav-thursday" role="tab" aria-controls="thursday"
                   aria-selected="false">T</a>
-              </li><li class="nav-item">
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" id="friday-tab" data-toggle="tab" href="#nav-friday" role="tab" aria-controls="friday"
                   aria-selected="false">F</a>
               </li>
@@ -448,7 +448,7 @@
           <div class="tab-pane fade show active" id="nav-sunday" role="tabpanel" aria-labelledby="nav-sunday-tab">
             <div class="row">
               <div class="col-lg-6">
-              
+                <!--
                 <div class="class-item d-flex align-items-center">
                   <a href="single.html" class="class-item-thumbnail">
                     <img src="images/img_1.jpg" alt="Image">
@@ -508,7 +508,7 @@
                     <span>30 minutes</span>
                   </div>
                 </div>
-               
+              -->
             
               </div>
               <div class="col-lg-6">
@@ -963,7 +963,6 @@
               </div>
             </div>
           </div>
-
           <div class="tab-pane fade" id="nav-thursday" role="tabpanel" aria-labelledby="nav-thursday-tab">
             <div class="row">
               <div class="col-lg-6">
@@ -1531,30 +1530,32 @@
               <!-- Tab panes -->
               <div class="tab-content">
                 <div role="tabpanel" class="tab-pane active" id="contact-us">
-                  <form method="post" data-aos="fade">
+                  <form id="contact-form" data-aos="fade">
                     <div class="form-group row">
                       <div class="col-md-6 mb-3 mb-lg-0">
-                        <input type="text" class="form-control" placeholder="First name">
+                        <input type="text" id="fname" name="fname" class="form-control" placeholder="First name">
                       </div>
                       <div class="col-md-6">
-                        <input type="text" class="form-control" placeholder="Last name">
+                        <input type="text" id="lname" name="lname" class="form-control" placeholder="Last name">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-md-12">
+                        <select id="subject-list" name="subject" class="form-control">
+                          <option value="">Subject</option>
+                        </select>
                       </div>
                     </div>
           
+                    
                     <div class="form-group row">
                       <div class="col-md-12">
-                        <input type="text" class="form-control" placeholder="Subject">
-                      </div>
-                    </div>
-          
-                    <div class="form-group row">
-                      <div class="col-md-12">
-                        <input type="email" class="form-control" placeholder="Email">
-                      </div>
-                    </div>
-                    <div class="form-group row">
-                      <div class="col-md-12">
-                        <textarea class="form-control" id="" cols="30" rows="10"
+                        <textarea class="form-control" id="message" name="message" cols="30" rows="10"
                           placeholder="Write your message here."></textarea>
                       </div>
                     </div>
@@ -1562,7 +1563,7 @@
                     <div class="form-group row">
                       <div class="col-md-6">
           
-                        <input type="submit" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
+                        <input type="button" onclick="contactSubmit()" class="btn btn-primary py-3 px-5 btn-block" value="Send Message">
                       </div>
                     </div>
           
@@ -1713,12 +1714,131 @@
 
   <script>
 
+    function loadDoc(url, cFunction) {
+      const xhttp = new XMLHttpRequest();
+      xhttp.onload = function() {cFunction(this);}
+      xhttp.open("GET", url);
+      xhttp.send();
+    }
+
+    function classXML(xmlData) {
+      // action goes here
+      var i;
+      var xmlDoc = xmlData.responseXML;
+      var class_list = xmlDoc.getElementsByTagName("class");
+      var html_text = "";
+      for(i=0;i<class_list.length;i++){
+        var single_page = class_list[i].getElementsByTagName("single-page")[0].childNodes[0].nodeValue;
+        var image = class_list[i].getElementsByTagName("image")[0].childNodes[0].nodeValue;
+        var time = class_list[i].getElementsByTagName("time")[0].childNodes[0].nodeValue;
+        var name = class_list[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+        var instructor = class_list[i].getElementsByTagName("instructor")[0].childNodes[0].nodeValue;
+        var duration = class_list[i].getElementsByTagName("duration")[0].childNodes[0].nodeValue;
+        html_text +='<div class="class-item d-flex align-items-center">'+
+                      '<a href="'+single_page+'" class="class-item-thumbnail">'+
+                        '<img src="'+image+'" alt="Image">'+
+                      '</a>'+
+                      '<div class="class-item-text">'+
+                        '<span>'+time+'</span>'+
+                        '<h2><a href="'+single_page+'">'+name+'</a></h2>'+
+                        '<span>'+instructor+'</span>,'+
+                        '<span>'+duration+'</span>'+
+                      '</div>'+
+                    '</div>'
+      }
+      console.log(html_text)
+      document.getElementById("nav-sunday").children[0].children[0].innerHTML = html_text;
+    }
+
+
+    function classJSON(jsonData) {
+      var jsonDoc = jsonData.responseText;
+      const jsonObj = JSON.parse(jsonDoc);
+      console.log(jsonObj.classes)
+      var html_text = "";
+      for(let i in jsonObj.classes){
+        html_text +='<div class="class-item d-flex align-items-center">'+
+                      '<a href="'+jsonObj.classes[i]["single_page"]+'" class="class-item-thumbnail">'+
+                        '<img src="'+jsonObj.classes[i]["image"]+'" alt="Image">'+
+                      '</a>'+
+                      '<div class="class-item-text">'+
+                        '<span>'+jsonObj.classes[i]["time"]+'</span>'+
+                        '<h2><a href="'+jsonObj.classes[i]["single_page"]+'">'+jsonObj.classes[i]["name"]+'</a></h2>'+
+                        '<span>'+jsonObj.classes[i]["instructor"]+'</span>,'+
+                        '<span>'+jsonObj.classes[i]["duration"]+'</span>'+
+                      '</div>'+
+                    '</div>'
+      }
+      console.log(html_text)
+      document.getElementById("nav-sunday").children[0].children[1].innerHTML = html_text;
+    }
+
+    function loadSubject(url){
+      fetch(url)
+      .then(response => response.json())
+      .then(data => subjectList(data));
+    }
+
+    function subjectList(data){
+      const select = document.getElementById("subject-list");
+      data.contactSubject.forEach( job => {
+          console.log(job);
+          const option = document.createElement("option")
+          option.textContent = job;
+          option.value = job;
+          select.appendChild(option);
+      });
+    }
+
     window.onload = function(){
       
       const contact = document.getElementById("contact-head");
       contact.innerHTML = "WooooW";
 
+      loadDoc("./xml/class_sunday.xml", classXML);
+
+      loadDoc("./json/class_sunday.json", classJSON);
+
+      //loadSubject("./json/contact_subject.json");
+      //loadSubject("http://localhost:5000");
+      loadSubject("http://localhost:3000/api/subject");
     };
+
+    //AJAX function
+    const ajax = async (config) => {
+        const request = await fetch(config.url, {
+            method: config.method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(config.payload)
+        });
+        response = await request.json();
+        console.log('response', response);
+        return response;
+    }
+
+
+    function contactSubmit() {
+      const data = { fname : document.getElementById('fname').value,
+                     lname : document.getElementById('lname').value,
+                     email : document.getElementById('email').value,
+                     subject : document.getElementById('subject-list').value,
+                     message : document.getElementById('message').value,
+                  }
+                  console.log(data)
+      // usage
+      response = ajax({
+          method: 'POST',
+          url: 'http://localhost:3000/api/contact',
+          payload: data
+      })
+      
+      console.log('Response', response)
+    }
+
+
   </script>
 
 
