@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Workout &mdash; Website Template by Colorlib</title>
+</head>
+<body>
+<form id="subscribe-form">
+              <div class="d-flex mb-5">
+                <input id="subscribe-email" type="email" class="form-control rounded-0" placeholder="Email">
+                <input type="submit" class="btn btn-primary rounded-0" value="Subscribe">
+              </div>
+            </form>
+<script>
+    const subscribeSubmit = async (event) => {
+        event.preventDefault(); // prevent page refresh
+
+        let subscribeData = {
+          email: document.getElementById('subscribe-email').value
+        };
+        console.log(subscribeData);
+
+        const response = await fetch('http://localhost:3000/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(subscribeData)
+        });
+
+        let result = await response.json();
+        console.log(result.status);
+        
+      };
+      
+      document.getElementById('subscribe-form').addEventListener('submit', subscribeSubmit);
+   
+</script>
+</body>
+</html>
