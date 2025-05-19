@@ -10,8 +10,14 @@ function login(data){
     return dd
 }
 
+function logout(data){
+
+    return gg
+}
+
 module.exports = {
     register,
-    login
+    login,
+    logout
 };
 
